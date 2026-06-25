@@ -1,0 +1,49 @@
+const {test, expect} = require('@playwright/test');
+
+test('Register New Client', async ({page})=>{
+
+    await page.goto("https://rahulshettyacademy.com/client/#/auth/login");
+
+    const registerBtn = page.locator("[class='login-wrapper-footer-text']");
+    const firstNameField = page.locator("#firstName");
+    const lastNameField = page.locator("#lastName");
+    const userEmailField = page.locator("#userEmail");
+    const userMobile = page.locator("#userMobile");
+    const userPwd = page.locator("#userPassword");
+    const userConfirmPwd = page.locator("#confirmPassword");
+    const checkBoxAge = page.locator("[type='checkbox']")
+
+
+    await registerBtn.click();
+
+    await firstNameField.fill("Xavier");
+    await lastNameField.fill("Guinto");
+    await userEmailField.fill("xavierguinto13@gmail.com");
+    await userMobile.fill("5532767643");
+    await userPwd.fill("TestingIsLife1!");
+    await userConfirmPwd.fill("TestingIsLife1!");
+
+    await checkBoxAge.check();
+    await page.locator("#login").click();
+    //await page.locator("div:has-text('Please check above checkbox')")
+    
+    console.log(await userConfirmPwd.inputValue())
+});
+
+test.only('Login Usuario Registrado', async ({page})=>{
+
+    await page.goto("https://rahulshettyacademy.com/client/#/auth/login");
+
+    const userEmailField = page.locator("#userEmail");
+    const userPwd = page.locator("#userPassword");
+    const loginBtn = page.locator("#login");
+    const titleCards = page.locator(".card-body b")
+
+    await userEmailField.fill("xavierguinto13@gmail.com");
+    await userPwd.fill("TestingIsLife1!");
+    await loginBtn.click()
+
+    console.log(await titleCards.nth(1).textContent());
+    console.log(await titleCards.first().textContent());
+    console.log(await titleCards.allTextContents());
+});
