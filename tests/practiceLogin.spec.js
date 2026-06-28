@@ -43,6 +43,8 @@ test.only('Login Usuario Registrado', async ({page})=>{
     await userPwd.fill("TestingIsLife1!");
     await loginBtn.click()
 
+    // await page.waitForLoadState('networkidle'); // This makes a wait until the page is completely loaded 
+    // titleCards.first().waitFor(); // This is another way to wait until those elements are present but only for when is 1 element present thats the reason why we are adding first()
     console.log(await titleCards.nth(1).textContent());
     console.log(await titleCards.first().textContent());
     console.log(await titleCards.allTextContents());
