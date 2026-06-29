@@ -33,7 +33,7 @@ test('Select Botton', async ({page})=>{
     //await page.pause();
 });
 
-test.only('Checkbox', async ({page})=> {
+test('Checkbox', async ({page})=> {
 
     const username = page.locator('#username');
     const password = page.locator("[type='password']");
@@ -50,4 +50,16 @@ test.only('Checkbox', async ({page})=> {
     // assertion
     await expect(termCheckBox).toBeChecked();
     //await page.pause();
+});
+
+test.only('Blinking attribute', async({page}) =>{
+
+    const username = page.locator('#username');
+    const password = page.locator("[type='password']");
+
+    await page.goto("https://rahulshettyacademy.com/loginpagePractise/")
+    await username.fill("rahulshettyacademy");
+    await password.fill("Learning@830$3mK2");
+
+    await expect(page.locator("[href*='documents-request']")).toHaveAttribute("class","blinkingText");
 });
