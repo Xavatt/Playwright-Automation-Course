@@ -1,4 +1,5 @@
 const {test, expect} = require('@playwright/test');
+const { text } = require('node:stream/consumers');
 
 test('Child Windows Handle', async ({browser})=>{
 
@@ -24,6 +25,14 @@ test('Child Windows Handle', async ({browser})=>{
         documentLink.click()          // triggers the new tab
     ]);
 
-    console.log(await newPage.locator(".red").textContent());
+    const textRed = await newPage.locator(".red").textContent();
+    const textArray = textRed.split("@"); // It will search on the text the '@' and it will separete the next before @ and after @ and give us the result in array
+    const domain = textArray[1].split(" ")[0]
+    //console.log(domain)
+
+    const username = page.locator('#username');
+
+    await username.fill(domain);
+    await page.pause();
 
 });
