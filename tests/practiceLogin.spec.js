@@ -50,7 +50,7 @@ test('Login Usuario Registrado', async ({page})=>{
     console.log(await titleCards.allTextContents());
 });
 
-test.only('Add item to cart', async ({page})=>{
+test('Add item to cart', async ({page})=>{
 
     await page.goto("https://rahulshettyacademy.com/client/#/auth/login");
 
@@ -74,3 +74,27 @@ test.only('Add item to cart', async ({page})=>{
     await page.pause();
     
 })
+
+test.only('Udemy Attempt', async ({page}) =>{
+
+    await page.goto("https://rahulshettyacademy.com/client/#/auth/login");
+
+    const userEmailField = page.locator("#userEmail");
+    const userPwd = page.locator("#userPassword");
+    const loginBtn = page.locator("#login");
+    const titleCards = page.locator(".card-body")
+    const productName = 'Zara Coat 3'
+
+    await userEmailField.fill("xavierguinto13@gmail.com");
+    await userPwd.fill("TestingIsLife1!");
+    await loginBtn.click()
+
+    // To get Zara Coat 3
+    const countProducts = await titleCards.count()
+    for(let i =0; i < countProducts; i++){
+        if (await titleCards.nth(i).locator("b").textContent() === productName) // Since title cards is a locator automation tools give you the change to modify locators so adding .locators we will start from the position of the previous locator in this case the locator title cards
+        {
+            // Add to cart
+        }
+    }
+});
