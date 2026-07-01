@@ -83,18 +83,27 @@ test.only('Udemy Attempt', async ({page}) =>{
     const userPwd = page.locator("#userPassword");
     const loginBtn = page.locator("#login");
     const titleCards = page.locator(".card-body")
-    const productName = 'Zara Coat 3'
+    const productName = 'ZARA COAT 3'
 
     await userEmailField.fill("xavierguinto13@gmail.com");
     await userPwd.fill("TestingIsLife1!");
     await loginBtn.click()
 
+    //await page.waitForLoadState('networkidle');
+    await page.locator(".card-body b").first().waitFor(); // Since the picture of the products takes a little more to load we have to wait until these are fully loaded
+    console.log(await titleCards.locator("b").allTextContents());
     // To get Zara Coat 3
-    const countProducts = await titleCards.count()
-    for(let i =0; i < countProducts; i++){
+    const countProducts = await titleCards.count();
+    for(let i =0; i < countProducts; i++)
+    {
+        
         if (await titleCards.nth(i).locator("b").textContent() === productName) // Since title cards is a locator automation tools give you the change to modify locators so adding .locators we will start from the position of the previous locator in this case the locator title cards
         {
             // Add to cart
+            await titleCards.nth(i).locator("text= Add To Cart").click(); // If we use that locator without restricting the scope it will give us the entire elements that match but since we are restrigting the scope we can use it for this scenario
+            console.log("Item added to the cart")
+            break;
         }
     }
+    //await page.pause();
 });
