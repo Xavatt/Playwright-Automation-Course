@@ -1,6 +1,6 @@
 const {test, expect} = require('@playwright/test');
 
-test('Register New Client', async ({page})=>{
+/* test('Register New Client', async ({page})=>{
 
     await page.goto("https://rahulshettyacademy.com/client/#/auth/login");
 
@@ -28,9 +28,9 @@ test('Register New Client', async ({page})=>{
     //await page.locator("div:has-text('Please check above checkbox')")
     
     console.log(await userConfirmPwd.inputValue())
-});
+}); */
 
-test.only('Login Usuario Registrado', async ({page})=>{
+test('Login Usuario Registrado', async ({page})=>{
 
     await page.goto("https://rahulshettyacademy.com/client/#/auth/login");
 
@@ -49,3 +49,28 @@ test.only('Login Usuario Registrado', async ({page})=>{
     console.log(await titleCards.first().textContent());
     console.log(await titleCards.allTextContents());
 });
+
+test.only('Add item to cart', async ({page})=>{
+
+    await page.goto("https://rahulshettyacademy.com/client/#/auth/login");
+
+    const userEmailField = page.locator("#userEmail");
+    const userPwd = page.locator("#userPassword");
+    const loginBtn = page.locator("#login");
+    const titleCards = page.locator(".card-body b")
+    const addToCartBtn = page.locator("[class*='shopping-cart']")
+    const myCartTitle = page.locator("div[class='cartSection'] h3");
+
+    await userEmailField.fill("xavierguinto13@gmail.com");
+    await userPwd.fill("TestingIsLife1!");
+    await loginBtn.click()
+
+    const nameProduct = await titleCards.nth(0).textContent(); 
+    await addToCartBtn.nth(1).click();
+
+    await addToCartBtn.nth(0).click();
+    await expect(myCartTitle).toContainText(nameProduct);
+
+    await page.pause();
+    
+})
