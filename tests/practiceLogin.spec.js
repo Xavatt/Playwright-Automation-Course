@@ -101,9 +101,13 @@ test.only('Udemy Attempt', async ({page}) =>{
         {
             // Add to cart
             await titleCards.nth(i).locator("text= Add To Cart").click(); // If we use that locator without restricting the scope it will give us the entire elements that match but since we are restrigting the scope we can use it for this scenario
-            console.log("Item added to the cart")
             break;
         }
     }
-    //await page.pause();
+    // Search the product recently added on the shopping card
+    await page.locator("[routerlink*='cart']").click();
+    await page.locator("div li").first().waitFor();
+    const boolCart = await page.locator(`h3:has-text('${productName}')`).isVisible();
+    expect(boolCart).toBeTruthy();
+
 });
