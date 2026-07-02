@@ -175,5 +175,47 @@ test.only('Udemy Attempt', async ({page}) =>{
             break;
         }
     }
-    
+    // Place the order
+    const placeOrder = page.locator(".action__submit");
+    const thanksMessage = page.locator(".hero-primary")
+    const thanksMessageValue = " Thankyou for the order. "
+
+    await placeOrder.click();
+    await expect(thanksMessage).toHaveText(thanksMessageValue);
+
+    /*
+      The confirmation label renders as "Order Id: <id> | ..." in a single
+      text node, so we split on "|" to isolate the id instead of relying on
+      a dedicated selector (the site doesn't expose one). The id segment
+      comes back with leading/trailing whitespace from that split, so trim()
+      is required before comparing it against the table's cell text later.
+    */
+    const orderID = page.locator("label.ng-star-inserted");
+    const orderIDValue = await orderID.textContent();
+    const textArrayIdOrder = orderIDValue.split("|");
+    const textIdOrder = textArrayIdOrder[1].trim();
+
+    const orderButton = page.locator("button[routerlink*='myorders']");
+    await orderButton.click();
+
+    /*
+      Orders table has no id-based selector, so we loop through every row's
+      id column and match by text to find the one we just placed. Once we
+      find the matching id, we click its "View" button to open that order's
+      summary.
+    */
+    const idColumns = page.locator("th[scope='row']");
+    await idColumns.first().waitFor();
+
+    const idCounts = await idColumns.count();
+
+    for(let i=0; i < idCounts;i++)
+    {
+       const textValueId = await idColumns.nth(i).textContent();
+       if(textValueId === textIdOrder)
+       {
+            await page.locator("button.btn-primary").nth(i).click();
+            break;
+       }
+    }
 });
