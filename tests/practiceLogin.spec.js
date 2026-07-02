@@ -91,7 +91,6 @@ test.only('Udemy Attempt', async ({page}) =>{
 
     //await page.waitForLoadState('networkidle');
     await page.locator(".card-body b").first().waitFor(); // Since the picture of the products takes a little more to load we have to wait until these are fully loaded
-    console.log(await titleCards.locator("b").allTextContents());
     // To get Zara Coat 3
     const countProducts = await titleCards.count();
     for(let i =0; i < countProducts; i++)
@@ -110,4 +109,71 @@ test.only('Udemy Attempt', async ({page}) =>{
     const boolCart = await page.locator(`h3:has-text('${productName}')`).isVisible();
     expect(boolCart).toBeTruthy();
 
+    // Finish payment method
+    const checkoutButton = page.locator("button[type='button']").last();
+    await checkoutButton.click();
+
+    /*
+      Card fields share the same generic class ("input txt"), so first()/last()
+      depend on DOM order — fragile if the form markup changes.
+      No coupon used in this flow, left empty on purpose.
+    */
+    const creditNumber = page.locator("[class=field]");
+    const nameCard = page.locator("[class='input txt']").last();
+    const cvvField = page.locator("[class='input txt']").first();
+    const cupon = page.locator("[name='coupon']");
+
+    await creditNumber.locator("[class*=text-validated]").fill("4542319992929322");
+    await cvvField.fill("235");
+    await nameCard.fill("Xavier Guinto");
+    await cupon.fill("");
+
+    //Shipping information validation using input
+    /*
+      Confirms the shipping email pre-fills correctly from the account/session,
+      not just that the field is visible.
+      Two ways to validate this were tried: through the input value (used here)
+      or through the label text (kept commented below as reference).
+    */
+    const emailFieldValidation = page.locator("div[class*='user__name'] input").first();
+    const country = page.locator("[placeholder*='Country']")
+    const email = "xavierguinto13@gmail.com"
+
+    const textEmailValidation = await emailFieldValidation.inputValue();
+    await expect(emailFieldValidation).toHaveValue(email);
+    
+    // Shipping information using label
+    /* 
+    const emailFieldValidation = page.locator("div[class*='user__name'] label");
+    const country = page.locator("div[class*='user__name'] input").last();
+    const email = "xavierguinto13@gmail.com"
+
+    const textEmailValidation = await emailFieldValidation.textContent();
+    await expect(emailFieldValidation).toContainText(email);
+ */
+
+    /*
+      The country field doesn't react to fill() — the page needs each keystroke
+      typed one by one to trigger the autocomplete, hence pressSequentially
+      instead of fill.
+      Dropdown has no stable selector per option, so we loop through all buttons
+      and match by exact text. The leading space in ' Mexico' is intentional —
+      matches the site's actual rendered text.
+    */
+    await country.pressSequentially('mex');
+    const optionDropdown = page.locator(".ta-results");
+    await optionDropdown.waitFor();
+
+    const optionCounts = await optionDropdown.locator("button").count();
+
+    for(let i=0; i<optionCounts;i++)
+    {
+        const textCountryName = await optionDropdown.locator("button").nth(i).textContent();
+        if(textCountryName === ' Mexico')
+        {
+            await optionDropdown.locator("button").nth(i).click();
+            break;
+        }
+    }
+    
 });
