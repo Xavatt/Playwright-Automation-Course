@@ -218,4 +218,6 @@ test.only('Udemy Attempt', async ({page}) =>{
             break;
        }
     }
+    const orderIDDetails = await page.locator(".col-text").textContent();
+    await expect(textIdOrder.includes(orderIDDetails)).toBeTruthy();
 });
