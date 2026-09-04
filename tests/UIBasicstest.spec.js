@@ -36,7 +36,7 @@ test('Error Message Playwright test',async ({browser})=>{
    
 });
 
-test.only('Login Correct Playwright test',async ({page})=>{
+test('Login Correct Playwright test',async ({page})=>{
 
     const username = page.locator('#username');
     const password = page.locator("[type='password']");
